@@ -8,7 +8,7 @@ import { Home } from "./_root/pages";
 
 const App = () => {
   return (
-    <main className="flax h-screen">
+    <main className="flex h-screen">
       <Routes>
         {/*public routes */}
         <Route element={<AuthLayout />}>
