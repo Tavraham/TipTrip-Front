@@ -85,7 +85,7 @@ const PostForm = () => {
         />
 
         {/* location */}
-        <FormField
+        {/* <FormField
           control={form.control}
           name="location"
           render={({ field }) => (
@@ -97,10 +97,10 @@ const PostForm = () => {
               <FormMessage className="shad-form_message" />
             </FormItem>
           )}
-        />
+        /> */}
 
         {/* tags */}
-        <FormField
+        {/* <FormField
           control={form.control}
           name="tags"
           render={({ field }) => (
@@ -116,7 +116,7 @@ const PostForm = () => {
               <FormMessage className="shad-form_message" />
             </FormItem>
           )}
-        />
+        /> */}
         <div className="flex gap-4 items-center justify-end">
           <Button type="button" className="shad-button_dark_4">
             Cancel

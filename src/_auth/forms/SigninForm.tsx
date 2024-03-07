@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link , useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useToast } from "@/components/ui/use-toast";
 
@@ -17,20 +17,13 @@ import { useForm } from "react-hook-form";
 import { SigninValidation } from "@/lib/validation";
 import { z } from "zod";
 import Loader from "@/components/shared/Loader";
-import test from "node:test";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 const SigninForm = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   let isLoading = false;
-  const isLoggedIn = true;
-  //user login
-  // const {chackAuthUser, isLoading: isUserLoading} = useUserContext();
-  
-  
-  // data from DB
-  // const {mutateAsync: signInAccount, isLoading: isSignIn }= useSignInAccount();
-
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof SigninValidation>>({
@@ -42,27 +35,73 @@ const SigninForm = () => {
   });
 
   // 2. Define a submit handler.
-  async function onSubmit(_values: z.infer<typeof SigninValidation>) {
+  async function onSubmit(values: z.infer<typeof SigninValidation>) {
+    try {
+      const res = await axios.post("http://localhost:3000/auth/login", values);
 
-    const session = true
-    // await signInAccount({
-    //   email: values.email,
-    //   password: values.password,
-    // })
-
-    if (!session){
-      return toast({title: "Sign in failed please try again."});
-    }
-
-    // const isLoggedIn = await chackAuthUser();
-
-    if(isLoggedIn){
       form.reset();
-      navigate('/')
-    }else{
-      return toast({ title: 'Sign in failed, please try again.'})
+      navigate("/home");
+      localStorage.setItem("accessToken", res.data.accessToken);
+      localStorage.setItem("refreshToken", res.data.refreshToken);
+
+      console.log(res.data);
+    } catch (error: any) {
+      console.error("Registration error:", error.message);
+      if (error.response && error.response.data) {
+        const responseData = error.response.data;
+        console.log("Response data:", responseData);
+        toast({ title: `Registration failed: ${responseData}` });
+      } else {
+        toast({ title: "Registration failed: Something went wrong." });
+      }
     }
   }
+
+  // Function to refresh token
+  const refreshToken = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:3000/auth/refreshToken",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
+          },
+        }
+      );
+      localStorage.setItem("accessToken", response.data.accessToken);
+      localStorage.setItem("refreshToken", response.data.refreshToken);
+    } catch (error) {
+      console.error(error);
+      // Handle error, e.g., logout user, redirect to login page, etc.
+    }
+  };
+
+  // Function to check access token expiry and trigger refresh if needed
+  const checkAccessTokenExpiry = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      // Access token not found, maybe user is not logged in
+      try {
+        const decodedToken = jwtDecode(accessToken); 
+        if (!decodedToken || !decodedToken.exp) {
+          // Token is invalid or doesn't contain an expiration claim
+          throw new Error("Invalid token or missing expiration claim");
+        }
+        const currentTime = Date.now() / 1000; // Convert milliseconds to seconds
+        if (decodedToken.exp < currentTime) {
+          // Access token is expired, refresh it
+          await refreshToken();
+          navigate("/home");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    
+  };
+
+  // Call this function when your app initializes or when appropriate
+  checkAccessTokenExpiry();
 
   return (
     <Form {...form}>

@@ -44,11 +44,19 @@ const SignupForm = () => {
       );
 
       form.reset();
-      navigate("/");
-
+      navigate("/home");
+      localStorage.setItem("accessToken",res.data.accessToken)
+      localStorage.setItem("refreshToken",res.data.refreshToken)
       console.log(res.data);
-    } catch {
-      return toast({ title: "Sign up failed please try again." });
+    }  catch (error: any) {
+      console.error("Registration error:", error.message);
+      if (error.response && error.response.data) {
+        const responseData = error.response.data;
+        console.log("Response data:", responseData);
+        toast({ title: `Registration failed: ${responseData}` });
+      } else {
+        toast({ title: "Registration failed: Something went wrong." });
+      }
     }
   }
 

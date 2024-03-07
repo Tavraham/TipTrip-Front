@@ -1,29 +1,45 @@
+import { useState, useEffect } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-
 import { INavLink } from "@/types";
 import { sidebarLinks } from "@/constants";
-
 import { Button } from "@/components/ui/button";
 import { Loader } from "lucide-react";
-
+import axios from "axios";
+import { toast } from "../ui/use-toast";
 
 const LeftSidebar = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const isLoading = false
-//   const { user, setUser, setIsAuthenticated, isLoading } = useUserContext();
+  const [user, setUser] = useState(null);
+  const [email, setEmail] = useState(null);
 
-//   const { mutate: signOut } = useSignOutAccount();
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const accessToken = localStorage.getItem("accessToken");
+      if (accessToken) {
+        try {
+          const res = await axios.get("http://localhost:3000/auth/userInfo", {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          });
+          setUser(res.data.name);
+          setEmail(res.data.email);
+        } catch (error) {
+          toast({ title: "Error fetching user info" });
+        }
+      }
+    };
 
-//   const handleSignOut = async (
-//     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-//   ) => {
-//     e.preventDefault();
-//     signOut();
-//     setIsAuthenticated(false);
-//     setUser(INITIAL_USER);
-//     navigate("/sign-in");
-//   };
+    fetchUserInfo();
+  }, []);
+
+  const handleLogout = async () => {
+    // await axios.get("http://localhost:3000/auth/logout");
+    // Clear local storage
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+
+    navigate("/");
+  };
 
   return (
     <nav className="leftsidebar">
@@ -37,23 +53,21 @@ const LeftSidebar = () => {
           />
         </Link>
 
-        {isLoading ? (
-          <div className="h-14">
-            <Loader />
-          </div>
-        ) : (
+        {
           <Link to={`/profile`} className="flex gap-3 items-center">
             <img
-              src={ "/assets/icons/profile-placeholder.svg"}
+              src={"/assets/icons/profile-placeholder.svg"}
               alt="profile"
               className="h-14 w-14 rounded-full"
             />
             <div className="flex flex-col">
-              <p className="body-bold">guest name</p>
-              <p className="small-regular text-light-3">guest username</p>
+              <p className="body-bold">{user ? user : "guest name"}</p>
+              <p className="small-regular text-light-3">
+                {email ? email : "guest email"}
+              </p>
             </div>
           </Link>
-        )}
+        }
 
         <ul className="flex flex-col gap-6">
           {sidebarLinks.map((link: INavLink) => {
@@ -64,10 +78,12 @@ const LeftSidebar = () => {
                 key={link.label}
                 className={`leftsidebar-link group ${
                   isActive && "bg-primary-500"
-                }`}>
+                }`}
+              >
                 <NavLink
                   to={link.route}
-                  className="flex gap-4 items-center p-4">
+                  className="flex gap-4 items-center p-4"
+                >
                   <img
                     src={link.imgURL}
                     alt={link.label}
@@ -86,8 +102,8 @@ const LeftSidebar = () => {
       <Button
         variant="ghost"
         className="shad-button_ghost"
-        // onClick={(e) => handleSignOut(e)}
-        >
+        onClick={handleLogout}
+      >
         <img src="/assets/icons/logout.svg" alt="logout" />
         <p className="small-medium lg:base-medium">Logout</p>
       </Button>
