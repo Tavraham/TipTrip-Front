@@ -33,19 +33,19 @@ const PostForm = ({ post }) => {
         caption: values.caption,
         file: values.file,
       });
-
+  
       const formData = new FormData();
-      formData.append("owner",localStorage.getItem("Id") || "");
+      formData.append("owner", localStorage.getItem("Id") || "");
       formData.append("description", values.caption);
-      formData.append("photo", values.file.name);
-
+      formData.append("file", values.file); // Append the file itself, not just the file name
+  
       await axios.post("http://localhost:3000/posts/createPost", formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           "Content-Type": "multipart/form-data"
         },
       });
-
+  
       // Navigate or handle success as needed
     } catch (error) {
       console.error("Submission error:", error);
