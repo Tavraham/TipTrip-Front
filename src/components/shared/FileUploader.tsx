@@ -3,27 +3,31 @@ import { FileWithPath, useDropzone } from "react-dropzone";
 import { Button } from "../ui/button";
 
 type FileUploaderProps = {
-  fieldChange: (FILES: File[]) => void;
+  fieldChange: (file: File | null) => void;
 };
 
-const FileUploader = ({ fieldChange, mediaUrl }: FileUploaderProps) => {
-  const [file, setFile] = useState<File[]>([]);
-  const [fileUrl, setFileUrl] = useState("");
+const FileUploader = ({ fieldChange }: FileUploaderProps) => {
+  const [file, setFile] = useState<File | null>(null);
+  const [fileUrl, setFileUrl] = useState<string | null>(null);
 
   const onDrop = useCallback(
     (acceptedFiles: FileWithPath[]) => {
-      setFile(acceptedFiles);
-      fieldChange(acceptedFiles);
-      setFileUrl(URL.createObjectURL(acceptedFiles[0]));
+      const selectedFile = acceptedFiles[0];
+      setFile(selectedFile);
+      fieldChange(selectedFile);
+      setFileUrl(URL.createObjectURL(selectedFile));
     },
-    [file]
+    [fieldChange]
   );
+
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
       "image/*": [".png", ".jpeg", ".jpg", ".svg"],
     },
+    multiple: false, // Ensure only one file is accepted
   });
+
   return (
     <div
       {...getRootProps()}
@@ -32,15 +36,10 @@ const FileUploader = ({ fieldChange, mediaUrl }: FileUploaderProps) => {
       <input {...getInputProps()} className="cursor-pointer" />
       {fileUrl ? (
         <>
-        <div className="flex flex-1 justify-center w-full p-5 lg:p-10">
-          <img 
-          src={fileUrl} 
-          alt="image" 
-          className="file_uploader-img" 
-          />
-        </div>
-        <p className="file_uploader-label">Click or drag photo to replace</p>
-
+          <div className="flex flex-1 justify-center w-full p-5 lg:p-10">
+            <img src={fileUrl} alt="image" className="file_uploader-img" />
+          </div>
+          <p className="file_uploader-label">Click or drag photo to replace</p>
         </>
       ) : (
         <div className="file_uploader-box">

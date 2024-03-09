@@ -1,5 +1,4 @@
 import * as z from "zod";
-import { Models } from "appwrite";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,41 +7,49 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-// import { PostValidation } from "@/lib/validation";
-import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "../ui/textarea";
 import FileUploader from "../shared/FileUploader";
-// import { useUserContext } from "@/context/AuthContext";
-// import { FileUploader, Loader } from "@/components/shared";
-// import { useCreatePost, useUpdatePost } from "@/lib/react-query/queries";
+import axios from "axios";
 
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-});
 
-const PostForm = ({post}) => {
-  // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+const PostForm = ({ post }) => {
+  const navigate = useNavigate();
+
+  const form = useForm({
     defaultValues: {
-      username: "",
+      caption: post ? post.caption : "",
+      file: post ? post.imageUrl : "",
     },
   });
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: { caption: string; file: File }) {
+    try {
+      console.log("Form values:", {
+        caption: values.caption,
+        file: values.file,
+      });
+
+      const formData = new FormData();
+      formData.append("owner",localStorage.getItem("Id") || "");
+      formData.append("description", values.caption);
+      formData.append("photo", values.file.name);
+
+      await axios.post("http://localhost:3000/posts/createPost", formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          "Content-Type": "multipart/form-data"
+        },
+      });
+
+      // Navigate or handle success as needed
+    } catch (error) {
+      console.error("Submission error:", error);
+    }
   }
 
   return (
@@ -77,49 +84,13 @@ const PostForm = ({post}) => {
             <FormItem>
               <FormLabel className="shad-form_label">Add Photos</FormLabel>
               <FormControl>
-                <FileUploader 
-                fieldChange={field.onChange}
-                mediaUrl={post?.imageUrl}
-                />
+                <FileUploader fieldChange={field.onChange} />
               </FormControl>
               <FormMessage className="shad-form_message" />
             </FormItem>
           )}
         />
 
-        {/* location */}
-        {/* <FormField
-          control={form.control}
-          name="location"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="shad-form_label">Add Location</FormLabel>
-              <FormControl>
-                <Input type="text" className="shad-form_message" />
-              </FormControl>
-              <FormMessage className="shad-form_message" />
-            </FormItem>
-          )}
-        /> */}
-
-        {/* tags */}
-        {/* <FormField
-          control={form.control}
-          name="tags"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="shad-form_label">Add tags</FormLabel>
-              <FormControl>
-                <Input
-                  type="text"
-                  className="shad-form_message"
-                  placeholder="Trip, Expression, Food "
-                />
-              </FormControl>
-              <FormMessage className="shad-form_message" />
-            </FormItem>
-          )}
-        /> */}
         <div className="flex gap-4 items-center justify-end">
           <Button type="button" className="shad-button_dark_4">
             Cancel

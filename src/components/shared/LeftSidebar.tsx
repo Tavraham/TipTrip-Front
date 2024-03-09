@@ -23,6 +23,8 @@ const LeftSidebar = () => {
           });
           setUser(res.data.name);
           setEmail(res.data.email);
+          localStorage.setItem("Id", res.data._id);
+          console.log(res.data._id);          
         } catch (error) {
           toast({ title: "Error fetching user info" });
         }
