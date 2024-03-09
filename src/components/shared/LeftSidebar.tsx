@@ -24,7 +24,8 @@ const LeftSidebar = () => {
           setUser(res.data.name);
           setEmail(res.data.email);
           localStorage.setItem("Id", res.data._id);
-          console.log(res.data._id);          
+          localStorage.setItem("name", res.data.name);
+          localStorage.setItem("caption", res.data.description);
         } catch (error) {
           toast({ title: "Error fetching user info" });
         }
@@ -37,6 +38,8 @@ const LeftSidebar = () => {
   const handleLogout = async () => {
     // await axios.get("http://localhost:3000/auth/logout");
     // Clear local storage
+    localStorage.removeItem("Id");
+    localStorage.removeItem("name");
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
 

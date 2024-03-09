@@ -45,8 +45,8 @@ const PostForm = ({ post }) => {
           "Content-Type": "multipart/form-data"
         },
       });
-  
-      // Navigate or handle success as needed
+      navigate("/home");  
+
     } catch (error) {
       console.error("Submission error:", error);
     }
