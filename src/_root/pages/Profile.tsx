@@ -1,16 +1,9 @@
-import {
-  Route,
-  Routes,
-  Link,
-  Outlet,
-  useParams,
-  useLocation,
-} from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
-import { Button } from "@/components/ui/button";
-import { LikedPosts } from "@/_root/pages";
-import GridPostList from "@/components/shared/GridPostList";
 import Loader from "@/components/shared/Loader";
+import axios from "axios";
+import { useState } from "react";
+import PostCard from "@/components/shared/PostCard";
 
 interface StabBlockProps {
   value: string | number;
@@ -25,13 +18,28 @@ const StatBlock = ({ value, label }: StabBlockProps) => (
 );
 
 const Profile = () => {
-  const { id } = useParams();
-  const { user } = useUserContext();
-  const { pathname } = useLocation();
+  // const { id } = useParams();
+  const name = localStorage.getItem("name");
+  const [posts, setPosts] = useState([]);
 
-  const { data: currentUser } = useGetUserById(id || "");
+  async function getPostByName() {
+    try {
+      const res = await axios.get(
+        `http://localhost:3000/posts/getPostByName/${name}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      setPosts(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  getPostByName();
 
-  if (!currentUser)
+  if (!posts)
     return (
       <div className="flex-center w-full h-full">
         <Loader />
@@ -44,7 +52,11 @@ const Profile = () => {
         <div className="flex xl:flex-row flex-col max-xl:items-center flex-1 gap-7">
           <img
             src={
-              currentUser.imageUrl || "/assets/icons/profile-placeholder.svg"
+              localStorage.getItem("profilePicture") === "null"
+                ? "/assets/icons/profile-placeholder.svg"
+                : `http://localhost:3000/${localStorage.getItem(
+                    "profilePicture"
+                  )}`
             }
             alt="profile"
             className="w-28 h-28 lg:h-36 lg:w-36 rounded-full"
@@ -52,31 +64,25 @@ const Profile = () => {
           <div className="flex flex-col flex-1 justify-between md:mt-2">
             <div className="flex flex-col w-full">
               <h1 className="text-center xl:text-left h3-bold md:h1-semibold w-full">
-                {currentUser.name}
+                {name}
               </h1>
-              <p className="small-regular md:body-medium text-light-3 text-center xl:text-left">
-                @{currentUser.username}
-              </p>
             </div>
 
             <div className="flex gap-8 mt-10 items-center justify-center xl:justify-start flex-wrap z-20">
-              <StatBlock value={currentUser.posts.length} label="Posts" />
-              <StatBlock value={20} label="Followers" />
-              <StatBlock value={20} label="Following" />
+              <StatBlock value={posts.length} label="Posts" />
+              <StatBlock
+                value={localStorage.getItem("email") || ""}
+                label={""}
+              />
             </div>
-
-            <p className="small-medium md:base-medium text-center xl:text-left mt-7 max-w-screen-sm">
-              {currentUser.bio}
-            </p>
           </div>
 
           <div className="flex justify-center gap-4">
-            <div className={`${user.id !== currentUser.$id && "hidden"}`}>
+            <div>
               <Link
-                to={`/update-profile/${currentUser.$id}`}
-                className={`h-12 bg-dark-4 px-5 text-light-1 flex-center gap-2 rounded-lg ${
-                  user.id !== currentUser.$id && "hidden"
-                }`}>
+                to={`/update-profile/${name}`}
+                className={`h-12 bg-dark-4 px-5 text-light-1 flex-center gap-2 rounded-lg `}
+              >
                 <img
                   src={"/assets/icons/edit.svg"}
                   alt="edit"
@@ -88,56 +94,16 @@ const Profile = () => {
                 </p>
               </Link>
             </div>
-            <div className={`${user.id === id && "hidden"}`}>
-              <Button type="button" className="shad-button_primary px-8">
-                Follow
-              </Button>
-            </div>
           </div>
         </div>
       </div>
-
-      {currentUser.$id === user.id && (
-        <div className="flex max-w-5xl w-full">
-          <Link
-            to={`/profile/${id}`}
-            className={`profile-tab rounded-l-lg ${
-              pathname === `/profile/${id}` && "!bg-dark-3"
-            }`}>
-            <img
-              src={"/assets/icons/posts.svg"}
-              alt="posts"
-              width={20}
-              height={20}
-            />
-            Posts
-          </Link>
-          <Link
-            to={`/profile/${id}/liked-posts`}
-            className={`profile-tab rounded-r-lg ${
-              pathname === `/profile/${id}/liked-posts` && "!bg-dark-3"
-            }`}>
-            <img
-              src={"/assets/icons/like.svg"}
-              alt="like"
-              width={20}
-              height={20}
-            />
-            Liked Posts
-          </Link>
-        </div>
-      )}
-
-      <Routes>
-        <Route
-          index
-          element={<GridPostList posts={currentUser.posts} showUser={false} />}
-        />
-        {currentUser.$id === user.id && (
-          <Route path="/liked-posts" element={<LikedPosts />} />
-        )}
-      </Routes>
-      <Outlet />
+      <ul className="flex flex-col flex-1 gap-9 w-full">
+        {posts.map((post) => (
+          <li key={post} className="flex justify-center w-full">
+            <PostCard post={post} />
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

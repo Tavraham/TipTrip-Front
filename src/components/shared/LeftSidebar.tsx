@@ -23,9 +23,10 @@ const LeftSidebar = () => {
           });
           setUser(res.data.name);
           setEmail(res.data.email);
-          localStorage.setItem("Id", res.data._id);
+          // localStorage.setItem("Id", res.data._id);
           localStorage.setItem("name", res.data.name);
-          localStorage.setItem("caption", res.data.description);
+          localStorage.setItem("email", res.data.email);
+          localStorage.setItem("profilePicture", res.data.photo);
         } catch (error) {
           toast({ title: "Error fetching user info" });
         }
