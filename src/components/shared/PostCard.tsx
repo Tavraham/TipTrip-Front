@@ -1,10 +1,6 @@
-import { log } from "console";
 import { Link } from "react-router-dom";
 
 const PostCard = ({ post }) => {
-   
-  console.log(`Image URL: http://localhost:3000/${post.photo}`);
-
   return (
     <div className="post-card">
       <div className="flex-between">
@@ -23,12 +19,11 @@ const PostCard = ({ post }) => {
           <div className="flex flex-col">
             <p className="base-medium lg:body-bold text-light-1">
               {post.name}
-            
             </p>
           </div>
         </div>
         <Link
-          to={`/update-post/${post.$id}`}
+          to={`/update-post/${post._id}`}
           className={`${localStorage.getItem("name") !== post.name && "hidden"}`}
         >
           <img src="\assets\icons\edit.svg" alt="edit" width={20} height={20} />

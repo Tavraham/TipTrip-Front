@@ -16,40 +16,57 @@ import { Textarea } from "../ui/textarea";
 import FileUploader from "../shared/FileUploader";
 import axios from "axios";
 
-
 const PostForm = ({ post }) => {
+  console.log("PostForm post:", post);
+
   const navigate = useNavigate();
 
   const form = useForm({
     defaultValues: {
-      caption: post ? post.caption : "",
-      file: post ? post.imageUrl : "",
+      caption: post ? post.description : "",
+      file: post ? post.photo : "", 
     },
   });
-
-  async function onSubmit(values: { caption: string; file: File }) {
-    try {
-      
   
+
+  async function onSubmit(values: { caption: string; file: string }) {
+    try {
       const formData = new FormData();
       formData.append("name", localStorage.getItem("name") || "");
       formData.append("description", values.caption);
       formData.append("file", values.file); // Append the file itself, not just the file name
-  
-      console.log("Form values:", {
-        caption: values.caption,
-        file: values.file,
-      });
-      
       await axios.post("http://localhost:3000/posts/createPost", formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          "Content-Type": "multipart/form-data"
+          "Content-Type": "multipart/form-data",
         },
       });
-      
-      navigate("/home");  
 
+      navigate("/home");
+    } catch (error) {
+      console.error("Submission error:", error);
+    }
+  }
+
+  async function onUpdate(values: { caption: string; file: string }) {
+    console.log("ema shelo");
+    
+    try {
+      const formData = new FormData();
+      formData.append("description", values.caption);
+      formData.append("file", values.file); // Append the file itself, not just the file name
+      await axios.put(
+        `http://localhost:3000/posts/updatePost/${post._id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      navigate("/home");
     } catch (error) {
       console.error("Submission error:", error);
     }
@@ -58,7 +75,7 @@ const PostForm = ({ post }) => {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={post ? form.handleSubmit(onUpdate) : form.handleSubmit(onSubmit)}
         className="flex-col gap-9 w-full max-w-5xl"
       >
         {/* caption */}
