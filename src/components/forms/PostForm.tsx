@@ -109,7 +109,7 @@ const PostForm = ({ post }) => {
         />
 
         <div className="flex gap-4 items-center justify-end">
-          <Button type="button" onClick={()=> navigate('/home')} className="shad-button_dark_4">
+          <Button type="button" onClick={()=> navigate(-1)} className="shad-button_dark_4">
             Cancel
           </Button>
           <Button
