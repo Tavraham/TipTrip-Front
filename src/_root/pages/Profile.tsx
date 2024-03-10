@@ -1,8 +1,7 @@
-import { Link, Outlet } from "react-router-dom";
-
+import { Link } from "react-router-dom";
 import Loader from "@/components/shared/Loader";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PostCard from "@/components/shared/PostCard";
 
 interface StabBlockProps {
@@ -18,26 +17,51 @@ const StatBlock = ({ value, label }: StabBlockProps) => (
 );
 
 const Profile = () => {
-  // const { id } = useParams();
   const name = localStorage.getItem("name");
   const [posts, setPosts] = useState([]);
+  const [refreshKey, setRefreshKey] = useState(0); // State for triggering refresh
 
-  async function getPostByName() {
+  useEffect(() => {
+    async function getPosts() {
+      try {
+        const res = await axios.get(
+          `http://localhost:3000/posts/getPostByName/${name}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+        setPosts(res.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getPosts();
+  }, [name, refreshKey]); // Include refreshKey in the dependency array
+
+  const changePicture = async (event) => {
     try {
-      const res = await axios.get(
-        `http://localhost:3000/posts/getPostByName/${name}`,
+      const formData = new FormData();
+      formData.append("name", name || "");
+      formData.append("file", event.target.files[0]);
+      const res = await axios.put(
+        `http://localhost:3000/auth/changeProfilePicture`,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
-      setPosts(res.data);
+      localStorage.setItem("profilePicture", res.data.photo);
+      // Trigger refresh by updating refreshKey
+      setRefreshKey((prevKey) => prevKey + 1);
     } catch (error) {
-      console.error(error);
+      console.error("Submission error:", error);
     }
-  }
-  getPostByName();
+  };
 
   if (!posts)
     return (
@@ -49,7 +73,9 @@ const Profile = () => {
   return (
     <div className="profile-container">
       <div className="profile-inner_container">
+        {/* Profile details */}
         <div className="flex xl:flex-row flex-col max-xl:items-center flex-1 gap-7">
+          {/* Profile picture */}
           <img
             src={
               localStorage.getItem("profilePicture") === "null"
@@ -61,13 +87,29 @@ const Profile = () => {
             alt="profile"
             className="w-28 h-28 lg:h-36 lg:w-36 rounded-full"
           />
+          {/* Upload profile picture */}
+          <label htmlFor="upload-photo" className="cursor-pointer">
+            <img
+              src={"/assets/icons/edit.svg"}
+              alt="edit"
+              width={20}
+              height={20}
+            />
+            <input
+              type="file"
+              id="upload-photo"
+              className="hidden"
+              onChange={changePicture}
+            />
+          </label>
+          {/* Profile information */}
           <div className="flex flex-col flex-1 justify-between md:mt-2">
             <div className="flex flex-col w-full">
               <h1 className="text-center xl:text-left h3-bold md:h1-semibold w-full">
                 {name}
               </h1>
             </div>
-
+            {/* User stats */}
             <div className="flex gap-8 mt-10 items-center justify-center xl:justify-start flex-wrap z-20">
               <StatBlock value={posts.length} label="Posts" />
               <StatBlock
@@ -76,7 +118,7 @@ const Profile = () => {
               />
             </div>
           </div>
-
+          {/* Edit profile button */}
           <div className="flex justify-center gap-4">
             <div>
               <Link
@@ -97,6 +139,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
+      {/* Display user's posts */}
       <ul className="flex flex-col flex-1 gap-9 w-full">
         {posts.map((post) => (
           <li key={post} className="flex justify-center w-full">

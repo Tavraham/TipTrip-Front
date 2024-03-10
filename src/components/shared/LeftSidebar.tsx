@@ -3,7 +3,6 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { INavLink } from "@/types";
 import { sidebarLinks } from "@/constants";
 import { Button } from "@/components/ui/button";
-import { Loader } from "lucide-react";
 import axios from "axios";
 import { toast } from "../ui/use-toast";
 
@@ -23,7 +22,6 @@ const LeftSidebar = () => {
           });
           setUser(res.data.name);
           setEmail(res.data.email);
-          // localStorage.setItem("Id", res.data._id);
           localStorage.setItem("name", res.data.name);
           localStorage.setItem("email", res.data.email);
           localStorage.setItem("profilePicture", res.data.photo);
@@ -62,7 +60,13 @@ const LeftSidebar = () => {
         {
           <Link to={`/profile`} className="flex gap-3 items-center">
             <img
-              src={"/assets/icons/profile-placeholder.svg"}
+              src={
+                localStorage.getItem("profilePicture") === "null"
+                  ? "/assets/icons/profile-placeholder.svg"
+                  : `http://localhost:3000/${localStorage.getItem(
+                      "profilePicture"
+                    )}`
+              }
               alt="profile"
               className="h-14 w-14 rounded-full"
             />

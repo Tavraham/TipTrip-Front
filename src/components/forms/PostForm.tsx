@@ -15,8 +15,6 @@ import FileUploader from "../shared/FileUploader";
 import axios from "axios";
 
 const PostForm = ({ post }) => {
-  console.log("PostForm post:", post);
-
   const navigate = useNavigate();
 
   const form = useForm({
@@ -47,8 +45,6 @@ const PostForm = ({ post }) => {
   }
 
   async function onUpdate(values: { caption: string; file: string }) {
-    console.log("ema shelo");
-    
     try {
       const formData = new FormData();
       formData.append("description", values.caption);
