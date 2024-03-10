@@ -1,7 +1,26 @@
+import axios from "axios";
 import { Link } from "react-router-dom";
 
 const PostCard = ({ post }) => {
   console.log(post.profilePic, "post.profilePicture");
+
+  function deletePost() {
+    const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+    if (confirmDelete) {
+      axios.delete(`http://localhost:3000/posts/deletePost/${post._id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }
+  }
 
   return (
     <div className="post-card">
@@ -30,6 +49,13 @@ const PostCard = ({ post }) => {
         >
           <img src="\assets\icons\edit.svg" alt="edit" width={20} height={20} />
         </Link>
+        <button
+         onClick={deletePost} className={`${
+          localStorage.getItem("name") !== post.name && "hidden"
+        }`} >
+          <img src="\assets\icons\delete.svg" alt="more" width={20} height={20} />
+          
+        </button>
       </div>
       <Link to={`/posts/${post.$id}`}>
         <div className="small-medium lg:base-medium py-5">

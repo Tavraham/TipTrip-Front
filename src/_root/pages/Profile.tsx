@@ -19,7 +19,6 @@ const StatBlock = ({ value, label }: StabBlockProps) => (
 const Profile = () => {
   const name = localStorage.getItem("name");
   const [posts, setPosts] = useState([]);
-  const [refreshKey, setRefreshKey] = useState(0); // State for triggering refresh
 
   useEffect(() => {
     async function getPosts() {
@@ -38,7 +37,7 @@ const Profile = () => {
       }
     }
     getPosts();
-  }, [name, refreshKey]); // Include refreshKey in the dependency array
+  }, [name]); 
 
   const changePicture = async (event) => {
     try {
@@ -56,8 +55,8 @@ const Profile = () => {
         }
       );
       localStorage.setItem("profilePicture", res.data.photo);
-      // Trigger refresh by updating refreshKey
-      setRefreshKey((prevKey) => prevKey + 1);
+
+      window.location.reload();
     } catch (error) {
       console.error("Submission error:", error);
     }
