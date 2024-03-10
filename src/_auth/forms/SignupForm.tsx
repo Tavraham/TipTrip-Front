@@ -91,21 +91,6 @@ const SignupForm = () => {
             )}
           />
 
-          {/* <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>UserName</FormLabel>
-                <FormControl>
-                  <Input type="text" className="shad-input" {...field} />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
-
           <FormField
             control={form.control}
             name="email"
@@ -150,7 +135,7 @@ const SignupForm = () => {
           <p className="text-small-regular text-light-2 text-center mt-2">
             Already have an account ?
             <Link
-              to="/"
+              to="/sign-in"
               className="text-primary-500  text-small-semibold ml-1"
             >
               Log in{" "}
