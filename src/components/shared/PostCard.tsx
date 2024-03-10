@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 
 const PostCard = ({ post }) => {
    
-  
+  console.log(`Image URL: http://localhost:3000/${post.photo}`);
+
   return (
     <div className="post-card">
       <div className="flex-between">
@@ -21,14 +22,14 @@ const PostCard = ({ post }) => {
           </Link>
           <div className="flex flex-col">
             <p className="base-medium lg:body-bold text-light-1">
-              {/* {localStorage.getItem("name")} */}
-              post.
+              {post.name}
+            
             </p>
           </div>
         </div>
         <Link
           to={`/update-post/${post.$id}`}
-          // className={`${localStorage.getItem("Id") !== post.creator.$id && "hidden"}`}
+          className={`${localStorage.getItem("name") !== post.name && "hidden"}`}
         >
           <img src="\assets\icons\edit.svg" alt="edit" width={20} height={20} />
         </Link>
@@ -36,12 +37,13 @@ const PostCard = ({ post }) => {
       <Link to={`/posts/${post.$id}`}>
         <div className="small-medium lg:base-medium py-5">
           <p>
-            {localStorage.getItem("caption")}
+            {post.description}
           </p>
           <ul className="flex gap-1 mt-2"></ul>
         </div>
         <img
-          src={post.imageUrl || "/assets/icons/profile-placeholder.svg"}
+          // src={post.photo || "/assets/icons/profile-placeholder.svg"}
+          src={`http://localhost:3000/${post.photo}`}
           className="post-card_img"
           alt="post image"
         />
