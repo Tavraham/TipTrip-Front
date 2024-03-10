@@ -82,7 +82,7 @@ const SigninForm = () => {
     if (accessToken) {
       // Access token not found, maybe user is not logged in
       try {
-        const decodedToken = jwtDecode(accessToken); 
+        const decodedToken = jwtDecode(accessToken);
         if (!decodedToken || !decodedToken.exp) {
           // Token is invalid or doesn't contain an expiration claim
           throw new Error("Invalid token or missing expiration claim");
@@ -97,11 +97,14 @@ const SigninForm = () => {
         console.error(error);
       }
     }
-    
   };
 
   // Call this function when your app initializes or when appropriate
   checkAccessTokenExpiry();
+
+  async function googleSignIn() {
+    await axios.get("http://localhost:3000/auth/googleLogin");
+  }
 
   return (
     <Form {...form}>
@@ -158,17 +161,17 @@ const SigninForm = () => {
               "Sign in"
             )}
           </Button>
-
-          <p className="text-small-regular text-light-2 text-center mt-2">
-            Don't have an account ?
-            <Link
-              to="/sign-up"
-              className="text-primary-500  text-small-semibold ml-1"
-            >
-              Sign up
-            </Link>
-          </p>
         </form>
+        
+        <p className="text-small-regular text-light-2 text-center mt-2">
+          Don't have an account ?
+          <Link
+            to="/sign-up"
+            className="text-primary-500  text-small-semibold ml-1"
+          >
+            Sign up
+          </Link>
+        </p>
       </div>
     </Form>
   );
