@@ -1,6 +1,9 @@
+import { log } from "console";
 import { Link } from "react-router-dom";
 
 const PostCard = ({ post }) => {
+   
+  
   return (
     <div className="post-card">
       <div className="flex-between">
@@ -18,7 +21,8 @@ const PostCard = ({ post }) => {
           </Link>
           <div className="flex flex-col">
             <p className="base-medium lg:body-bold text-light-1">
-              {localStorage.getItem("name")}
+              {/* {localStorage.getItem("name")} */}
+              post.
             </p>
           </div>
         </div>

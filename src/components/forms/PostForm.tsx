@@ -29,22 +29,25 @@ const PostForm = ({ post }) => {
 
   async function onSubmit(values: { caption: string; file: File }) {
     try {
+      
+  
+      const formData = new FormData();
+      formData.append("name", localStorage.getItem("name") || "");
+      formData.append("description", values.caption);
+      formData.append("file", values.file); // Append the file itself, not just the file name
+  
       console.log("Form values:", {
         caption: values.caption,
         file: values.file,
       });
-  
-      const formData = new FormData();
-      formData.append("owner", localStorage.getItem("Id") || "");
-      formData.append("description", values.caption);
-      formData.append("file", values.file); // Append the file itself, not just the file name
-  
+      
       await axios.post("http://localhost:3000/posts/createPost", formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           "Content-Type": "multipart/form-data"
         },
       });
+      
       navigate("/home");  
 
     } catch (error) {
