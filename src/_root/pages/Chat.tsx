@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { set } from "react-hook-form";
 import io from "socket.io-client";
 
 const Chat = () => {
