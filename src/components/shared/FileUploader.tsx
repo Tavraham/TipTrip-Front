@@ -1,31 +1,22 @@
-import { useCallback, useState } from "react";
+import React from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
 import { Button } from "../ui/button";
 
 type FileUploaderProps = {
   fieldChange: (file: File | null) => void;
+  imageUrl: string | null; // Added prop for the image URL
 };
 
-const FileUploader = ({ fieldChange }: FileUploaderProps) => {
-  const [file, setFile] = useState<File | null>(null);
-  const [fileUrl, setFileUrl] = useState<string | null>(null);
-
-  const onDrop = useCallback(
-    (acceptedFiles: FileWithPath[]) => {
-      const selectedFile = acceptedFiles[0];
-      setFile(selectedFile);
-      fieldChange(selectedFile);
-      setFileUrl(URL.createObjectURL(selectedFile));
-    },
-    [fieldChange]
-  );
-
+const FileUploader = ({ fieldChange, imageUrl }: FileUploaderProps) => {
   const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
     accept: {
       "image/*": [".png", ".jpeg", ".jpg", ".svg"],
     },
     multiple: false, // Ensure only one file is accepted
+    onDrop: (acceptedFiles: FileWithPath[]) => {
+      const selectedFile = acceptedFiles[0];
+      fieldChange(selectedFile);
+    },
   });
 
   return (
@@ -34,10 +25,10 @@ const FileUploader = ({ fieldChange }: FileUploaderProps) => {
       className="flex flex-center flex-col bg-dark-3 rounded-xl cursor-pointer"
     >
       <input {...getInputProps()} className="cursor-pointer" />
-      {fileUrl ? (
+      {imageUrl ? (
         <>
           <div className="flex flex-1 justify-center w-full p-5 lg:p-10">
-            <img src={fileUrl} alt="image" className="file_uploader-img" />
+            <img src={imageUrl} alt="image" className="file_uploader-img" />
           </div>
           <p className="file_uploader-label">Click or drag photo to replace</p>
         </>
@@ -49,7 +40,7 @@ const FileUploader = ({ fieldChange }: FileUploaderProps) => {
             height={77}
             alt="file-upload"
           />
-          <h3 className="base-medium text-light-2 mt-6"> Drag photo here</h3>
+          <h3 className="base-medium text-light-2 mt-6">Drag photo here</h3>
           <p className="text-light-4 small-regular mb-6">SVG, PNG, JPG</p>
           <Button className="shad-button_dark_4">Select from computer</Button>
         </div>
