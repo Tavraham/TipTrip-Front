@@ -41,7 +41,8 @@ const LeftSidebar = () => {
     localStorage.removeItem("name");
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-
+    localStorage.removeItem("email");
+    localStorage.removeItem("profilePicture");
     navigate("/");
   };
 

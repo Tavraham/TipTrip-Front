@@ -1,12 +1,27 @@
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
-// import { GoogleOAuthProvider } from "@react-oauth/google";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import axios from 'axios';
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <BrowserRouter>
-    {/* <GoogleOAuthProvider clientId="YOUR_CLIENT_ID"> */}
-      <App />
-    {/* </GoogleOAuthProvider> */}
-  </BrowserRouter>
-);
+// Function to fetch Google OAuth client ID from the backend
+async function fetchGoogleClientId() {
+  try {
+    const response = await axios.get('http://localhost:3000/api/googleClientId');
+    return response.data.clientId;
+  } catch (error) {
+    console.error('Error fetching Google client ID:', error);
+    return null;
+  }
+}
+
+// Fetch Google OAuth client ID and render the app
+fetchGoogleClientId().then(googleClientId => {
+  ReactDOM.createRoot(document.getElementById("root")!).render(
+    <BrowserRouter>
+      <GoogleOAuthProvider clientId={googleClientId}>
+        <App />
+      </GoogleOAuthProvider>
+    </BrowserRouter>
+  );
+});

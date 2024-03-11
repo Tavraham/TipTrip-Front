@@ -19,11 +19,12 @@ import { z } from "zod";
 import Loader from "@/components/shared/Loader";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 
 const SigninForm = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  let isLoading = false;
+  const isLoading = false;
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof SigninValidation>>({
@@ -38,13 +39,10 @@ const SigninForm = () => {
   async function onSubmit(values: z.infer<typeof SigninValidation>) {
     try {
       const res = await axios.post("http://localhost:3000/auth/login", values);
-
       form.reset();
-      navigate("/home");
       localStorage.setItem("accessToken", res.data.accessToken);
       localStorage.setItem("refreshToken", res.data.refreshToken);
-
-      console.log(res.data);
+      navigate("/home");
     } catch (error: any) {
       console.error("Registration error:", error.message);
       if (error.response && error.response.data) {
@@ -98,12 +96,16 @@ const SigninForm = () => {
       }
     }
   };
-
   // Call this function when your app initializes or when appropriate
   checkAccessTokenExpiry();
 
-  async function googleSignIn() {
-    await axios.get("http://localhost:3000/auth/googleLogin");
+  const loginToGoogle = async(credentialResponse: CredentialResponse) => {
+    const credentialDecoded = jwtDecode(credentialResponse.credential);
+    const res = await axios.post("http://localhost:3000/auth/googleLogin", { email: credentialDecoded.email, name: credentialDecoded.name})
+    localStorage.setItem("accessToken", res.data.accessToken);
+    localStorage.setItem("refreshToken", res.data.refreshToken);
+    navigate("/home");
+    console.log(res.data);
   }
 
   return (
@@ -162,7 +164,16 @@ const SigninForm = () => {
             )}
           </Button>
         </form>
-        
+
+        <GoogleLogin
+          onSuccess={(credentialResponse) => {
+            loginToGoogle(credentialResponse);
+          }}
+          onError={() => {
+            console.log("Login Failed!");
+          }}
+        />
+
         <p className="text-small-regular text-light-2 text-center mt-2">
           Don't have an account ?
           <Link
