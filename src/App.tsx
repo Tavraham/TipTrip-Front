@@ -2,13 +2,14 @@ import { Routes, Route } from "react-router-dom";
 
 import {
   Home,
-  Explore,
-  Saved,
+  // Explore,
+  // Saved,
   CreatePost,
   Profile,
   EditPost,
   PostDetails,
-  AllUsers,
+  Chat
+  // AllUsers,
 } from "@/_root/pages";
 import AuthLayout from "./_auth/AuthLayout";
 import RootLayout from "./_root/RootLayout";
@@ -31,9 +32,10 @@ const App = () => {
         {/* private routes */}
         <Route element={<RootLayout />}>
           <Route path="/home" element={<Home />} />
-          <Route path="/explore" element={<Explore />} />
-          <Route path="/saved" element={<Saved />} />
-          <Route path="/all-users" element={<AllUsers />} />
+          <Route path="/chat" element={<Chat />} />
+          {/* <Route path="/explore" element={<Explore />} /> */}
+          {/* <Route path="/saved" element={<Saved />} /> */}
+          {/* <Route path="/all-users" element={<AllUsers />} /> */}
           <Route path="/create-post" element={<CreatePost />} />
           <Route path="/update-post/:id" element={<EditPost />} />
           <Route path="/post/:id" element={<PostDetails />} />

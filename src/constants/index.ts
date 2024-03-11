@@ -5,19 +5,9 @@ export const sidebarLinks = [
       label: "Home",
     },
     {
-      imgURL: "/assets/icons/wallpaper.svg",
-      route: "/explore",
-      label: "Explore",
-    },
-    {
-      imgURL: "/assets/icons/people.svg",
-      route: "/all-users",
-      label: "People",
-    },
-    {
-      imgURL: "/assets/icons/bookmark.svg",
-      route: "/saved",
-      label: "Saved",
+      imgURL: "/assets/icons/chat.svg",
+      route: "/chat",
+      label: "Chat",
     },
     {
       imgURL: "/assets/icons/gallery-add.svg",
@@ -33,14 +23,9 @@ export const sidebarLinks = [
       label: "Home",
     },
     {
-      imgURL: "/assets/icons/wallpaper.svg",
-      route: "/explore",
-      label: "Explore",
-    },
-    {
-      imgURL: "/assets/icons/bookmark.svg",
-      route: "/saved",
-      label: "Saved",
+      imgURL: "/assets/icons/chat.svg",
+      route: "/chat",
+      label: "Chat",
     },
     {
       imgURL: "/assets/icons/gallery-add.svg",
