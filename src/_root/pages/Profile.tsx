@@ -37,7 +37,7 @@ const Profile = () => {
       }
     }
     getPosts();
-  }, [name]); 
+  }, [name]);
 
   const changePicture = async (event) => {
     try {
@@ -141,7 +141,7 @@ const Profile = () => {
       {/* Display user's posts */}
       <ul className="flex flex-col flex-1 gap-9 w-full">
         {posts.map((post) => (
-          <li key={post} className="flex justify-center w-full">
+          <li key={post.id} className="flex justify-center w-full">
             <PostCard post={post} />
           </li>
         ))}

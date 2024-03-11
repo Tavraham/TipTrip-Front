@@ -30,7 +30,7 @@ function Home() {
           <h2 className="h3-bold md:h2-bold text-left w-full">Home feed</h2>
           <ul className="flex flex-col flex-1 gap-9 w-full">
             {posts.map((post) => (
-              <li key={post} className="flex justify-center w-full">
+              <li key={post._id} className="flex justify-center w-full">
                 <PostCard post={post} />
               </li>
             ))}
