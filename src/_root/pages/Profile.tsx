@@ -3,7 +3,12 @@ import Loader from "@/components/shared/Loader";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import PostCard from "@/components/shared/PostCard";
-import { changeProfilePictureRoute, getPostByNameRoute, host, changeNameRoute } from "@/utils/apiRoutes";
+import {
+  changeProfilePictureRoute,
+  getPostByNameRoute,
+  host,
+  changeNameRoute,
+} from "@/utils/apiRoutes";
 
 interface StabBlockProps {
   value: string | number;
@@ -20,19 +25,18 @@ const StatBlock = ({ value, label }: StabBlockProps) => (
 const Profile = () => {
   // const name = localStorage.getItem("name");
   const [posts, setPosts] = useState([]);
-  const [name, setName] = useState<string>(() => localStorage.getItem("name") || '');
+  const [name, setName] = useState<string>(
+    () => localStorage.getItem("name") || ""
+  );
 
   useEffect(() => {
     async function getPosts() {
       try {
-        const res = await axios.get(
-          `${getPostByNameRoute}/${name}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-          }
-        );
+        const res = await axios.get(`${getPostByNameRoute}/${name}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        });
         setPosts(res.data);
       } catch (error) {
         console.error(error);
@@ -46,16 +50,12 @@ const Profile = () => {
       const formData = new FormData();
       formData.append("name", name || "");
       formData.append("file", event.target.files[0]);
-      const res = await axios.put(
-        changeProfilePictureRoute,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const res = await axios.put(changeProfilePictureRoute, formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
       localStorage.setItem("profilePicture", res.data.photo);
 
       window.location.reload();
@@ -68,32 +68,26 @@ const Profile = () => {
     try {
       const newName = prompt("Enter your new name:");
       if (!newName) return; // If user cancels the prompt, do nothing
-  
-      const res = await axios.put(
+
+      await axios.put(
         changeNameRoute,
-        { name, newName }, // Send the current name and the new name in the request body
+        { name, newName },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
         }
       );
-  
+
       // Update the name in localStorage with the new name returned from the server
-      localStorage.setItem("name", res.data.newName);
-  
-      // Update the name displayed in the UI
-      setName(res.data.newName);
-  
+      localStorage.setItem("name", newName);
+
       // Optionally, you can reload the page to reflect the name change immediately
       window.location.reload();
     } catch (error) {
       console.error("Error changing name:", error);
     }
   };
-  
-  
-
 
   if (!posts)
     return (
@@ -112,9 +106,7 @@ const Profile = () => {
             src={
               localStorage.getItem("profilePicture") === "null"
                 ? "/assets/icons/profile-placeholder.svg"
-                : `${host}/${localStorage.getItem(
-                    "profilePicture"
-                  )}`
+                : `${host}/${localStorage.getItem("profilePicture")}`
             }
             alt="profile"
             className="w-28 h-28 lg:h-36 lg:w-36 rounded-full"
@@ -163,9 +155,7 @@ const Profile = () => {
                   width={20}
                   height={20}
                 />
-                <p className="flex whitespace-nowrap small-medium">
-                  Edit Name
-                </p>
+                <p className="flex whitespace-nowrap small-medium">Edit Name</p>
               </button>
             </div>
           </div>
