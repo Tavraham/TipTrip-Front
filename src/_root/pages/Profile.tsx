@@ -111,7 +111,7 @@ const Profile = () => {
             alt="profile"
             className="w-28 h-28 lg:h-36 lg:w-36 rounded-full"
           />
-          {/* Upload profile picture */}
+          {/* Upload profile picture
           <label htmlFor="upload-photo" className="cursor-pointer">
             <img
               src={"/assets/icons/edit.svg"}
@@ -125,7 +125,7 @@ const Profile = () => {
               className="hidden"
               onChange={changePicture}
             />
-          </label>
+          </label> */}
           {/* Profile information */}
           <div className="flex flex-col flex-1 justify-between md:mt-2">
             <div className="flex flex-col w-full">
@@ -159,6 +159,32 @@ const Profile = () => {
               </button>
             </div>
           </div>
+
+           {/* Edit Picture button */}
+           <div className="flex justify-center gap-4">
+            <div>
+              <button
+                onChange={changePicture}
+                className={`h-12 bg-dark-4 px-5 text-light-1 flex-center gap-2 rounded-lg `}
+              >
+                <label htmlFor="upload-photo" className="cursor-pointer">
+            <img
+              src={"/assets/icons/edit.svg"}
+              alt="edit"
+              width={20}
+              height={20}
+            />
+            <input
+              type="file"
+              id="upload-photo"
+              className="hidden"
+            />
+          </label>
+                <p className="flex whitespace-nowrap small-medium">Change picture</p>
+              </button>
+            </div>
+          </div>
+
         </div>
       </div>
       {/* Display user's posts */}
