@@ -5,6 +5,7 @@ export const refreshTokenRoute = `${host}/auth/refreshToken`;
 export const googleLoginRoute = `${host}/auth/googleLogin`;
 export const registerRoute = `${host}/auth/register`;
 export const getUsersRoute = `${host}/auth/getAllUsers`;
+export const changeNameRoute = `${host}/auth/changeName`;
 export const getPostRoute = `${host}/posts/postId`;
 export const getAllPostsRoute = `${host}/posts/getAllPosts`;
 export const createCommentRoute = `${host}/posts/createComment`;

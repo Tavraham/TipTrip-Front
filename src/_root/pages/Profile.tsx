@@ -3,7 +3,7 @@ import Loader from "@/components/shared/Loader";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import PostCard from "@/components/shared/PostCard";
-import { changeProfilePictureRoute, getPostByNameRoute, host } from "@/utils/apiRoutes";
+import { changeProfilePictureRoute, getPostByNameRoute, host, changeNameRoute } from "@/utils/apiRoutes";
 
 interface StabBlockProps {
   value: string | number;
@@ -18,8 +18,9 @@ const StatBlock = ({ value, label }: StabBlockProps) => (
 );
 
 const Profile = () => {
-  const name = localStorage.getItem("name");
+  // const name = localStorage.getItem("name");
   const [posts, setPosts] = useState([]);
+  const [name, setName] = useState<string>(() => localStorage.getItem("name") || '');
 
   useEffect(() => {
     async function getPosts() {
@@ -62,6 +63,37 @@ const Profile = () => {
       console.error("Submission error:", error);
     }
   };
+
+  const changeName = async () => {
+    try {
+      const newName = prompt("Enter your new name:");
+      if (!newName) return; // If user cancels the prompt, do nothing
+  
+      const res = await axios.put(
+        changeNameRoute,
+        { name, newName }, // Send the current name and the new name in the request body
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+  
+      // Update the name in localStorage with the new name returned from the server
+      localStorage.setItem("name", res.data.newName);
+  
+      // Update the name displayed in the UI
+      setName(res.data.newName);
+  
+      // Optionally, you can reload the page to reflect the name change immediately
+      window.location.reload();
+    } catch (error) {
+      console.error("Error changing name:", error);
+    }
+  };
+  
+  
+
 
   if (!posts)
     return (
@@ -118,11 +150,11 @@ const Profile = () => {
               />
             </div>
           </div>
-          {/* Edit profile button */}
+          {/* Edit name button */}
           <div className="flex justify-center gap-4">
             <div>
-              <Link
-                to={`/update-profile/${name}`}
+              <button
+                onClick={changeName}
                 className={`h-12 bg-dark-4 px-5 text-light-1 flex-center gap-2 rounded-lg `}
               >
                 <img
@@ -132,9 +164,9 @@ const Profile = () => {
                   height={20}
                 />
                 <p className="flex whitespace-nowrap small-medium">
-                  Edit Profile
+                  Edit Name
                 </p>
-              </Link>
+              </button>
             </div>
           </div>
         </div>
