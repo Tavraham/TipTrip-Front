@@ -14,12 +14,14 @@ import {
 import { Textarea } from "../ui/textarea";
 import FileUploader from "../shared/FileUploader";
 import axios from "axios";
-import { createPostRoute, updatePostRoute } from "@/utils/apiRoutes";
+import { createPostRoute, host, updatePostRoute } from "@/utils/apiRoutes";
 
 const PostForm = ({ post }) => {
   const navigate = useNavigate();
-  const [imageUrl, setImageUrl] = useState<string | null>(post ? post.photo : null); // Set the initial image URL
-
+  const [imageUrl, setImageUrl] = useState<string | null>(
+    post ? `${host}/${post.photo.replace('..', '')}` : null
+  );
+  
   const form = useForm({
     defaultValues: {
       caption: post ? post.description : "",
