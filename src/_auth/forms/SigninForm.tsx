@@ -1,8 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
-
 import { useToast } from "@/components/ui/use-toast";
-
 import {
   Form,
   FormControl,
@@ -21,6 +19,7 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { useEffect } from "react";
+import { googleLoginRoute, loginRoute, refreshTokenRoute } from "@/utils/apiRoutes";
 
 const SigninForm = () => {
   const { toast } = useToast();
@@ -43,7 +42,7 @@ const SigninForm = () => {
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof SigninValidation>) {
     try {
-      const res = await axios.post("http://localhost:3000/auth/login", values);
+      const res = await axios.post(loginRoute, values);
       form.reset();
       localStorage.setItem("accessToken", res.data.accessToken);
       localStorage.setItem("refreshToken", res.data.refreshToken);
@@ -64,7 +63,7 @@ const SigninForm = () => {
   const refreshToken = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/auth/refreshToken",
+        refreshTokenRoute,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
@@ -107,7 +106,7 @@ const SigninForm = () => {
 
   const loginToGoogle = async (credentialResponse: CredentialResponse) => {
     const credentialDecoded = jwtDecode(credentialResponse.credential);
-    const res = await axios.post("http://localhost:3000/auth/googleLogin", {
+    const res = await axios.post(googleLoginRoute, {
       email: credentialDecoded.email,
       name: credentialDecoded.name,
     });

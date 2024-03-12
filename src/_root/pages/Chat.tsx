@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
+import { getUsersRoute, host } from "@/utils/apiRoutes";
 
 const Chat = () => {
   const [socket, setSocket] = useState<any>(null);
@@ -20,7 +21,7 @@ const Chat = () => {
         socket.disconnect();
       }
 
-      const newSocket = io("http://localhost:3000");
+      const newSocket = io(host);
 
       newSocket.emit(
         "join-room",
@@ -60,7 +61,7 @@ const Chat = () => {
 
   async function getAllUsers() {
     try {
-      const res = await axios.get(`http://localhost:3000/auth/getAllUsers`, {
+      const res = await axios.get(getUsersRoute, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
@@ -104,7 +105,7 @@ const Chat = () => {
                 src={
                   !user.photo
                     ? "/assets/icons/profile-placeholder.svg"
-                    : `http://localhost:3000/${user.photo}`
+                    : `${host}/${user.photo}`
                 }
                 alt="profilePic" 
                 className="w-11 h-11 rounded-full mr-2" />

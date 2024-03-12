@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import PostForm from "@/components/forms/PostForm";
+import { getPostRoute } from "@/utils/apiRoutes";
 
 const EditPost = () => {
   const { id } = useParams();
@@ -11,7 +12,7 @@ const EditPost = () => {
   useEffect(() => {
     async function getPost() {
       try {
-        const res = await axios.get(`http://localhost:3000/posts/postId/${id}`, {
+        const res = await axios.get(`${getPostRoute}/${id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },

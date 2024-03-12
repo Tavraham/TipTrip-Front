@@ -1,23 +1,30 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { useEffect } from "react";
+import axios from "axios";
+import { host, logoutRoute } from "@/utils/apiRoutes";
 
 const Topbar = () => {
-
   const navigate = useNavigate();
 
-
-
   const handleLogout = async () => {
-    // await axios.get("http://localhost:3000/auth/logout");
-    // Clear local storage
-    localStorage.removeItem("Id");
-    localStorage.removeItem("name");
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("email");
-    localStorage.removeItem("profilePicture");
-    navigate("/");
+    try {
+      await axios.get(logoutRoute, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
+      // Clear local storage
+      localStorage.removeItem("Id");
+      localStorage.removeItem("name");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("email");
+      localStorage.removeItem("profilePicture");
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -37,17 +44,15 @@ const Topbar = () => {
             variant="ghost"
             className="shad-button_ghost"
             onClick={handleLogout}
-            >
+          >
             <img src="\assets\icons\logout.svg" alt="logout" />
-
-
           </Button>
           <Link to={`/profile`} className="flex gap-3 items-center">
             <img
               src={
                 localStorage.getItem("profilePicture") === "null"
                   ? "/assets/icons/profile-placeholder.svg"
-                  : `http://localhost:3000/${localStorage.getItem(
+                  : `${host}/${localStorage.getItem(
                       "profilePicture"
                     )}`
               }

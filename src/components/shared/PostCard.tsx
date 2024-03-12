@@ -1,3 +1,4 @@
+import { deletePostRoute, host } from "@/utils/apiRoutes";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
@@ -8,7 +9,7 @@ const PostCard = ({ post }) => {
     );
     if (confirmDelete) {
       axios
-        .delete(`http://localhost:3000/posts/deletePost/${post._id}`, {
+        .delete(`${deletePostRoute}/${post._id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
@@ -32,7 +33,7 @@ const PostCard = ({ post }) => {
               src={
                 !post.profilePic
                   ? "/assets/icons/profile-placeholder.svg"
-                  : `http://localhost:3000/${post.profilePic}`
+                  : `${host}/${post.profilePic}`
               }
               alt="creator"
               className="rounded-full w-12 lg:h:12"
@@ -71,7 +72,7 @@ const PostCard = ({ post }) => {
         </div>
         <img
           // src={post.photo || "/assets/icons/profile-placeholder.svg"}
-          src={`http://localhost:3000/${post.photo}`}
+          src={`${host}/${post.photo}`}
           className="post-card_img"
           alt="post image"
         />

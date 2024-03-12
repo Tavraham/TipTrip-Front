@@ -18,6 +18,7 @@ import { SignupValidation } from "@/lib/validation";
 import { z } from "zod";
 import Loader from "@/components/shared/Loader";
 import axios from "axios";
+import { registerRoute } from "@/utils/apiRoutes";
 
 const SignupForm = () => {
   const { toast } = useToast();
@@ -39,7 +40,7 @@ const SignupForm = () => {
   async function onSubmit(values: z.infer<typeof SignupValidation>) {
     try {
       const res = await axios.post(
-        "http://localhost:3000/auth/register",
+        registerRoute,
         values
       );
       console.log(res.data);

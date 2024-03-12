@@ -3,11 +3,12 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import axios from 'axios';
+import { googleClientIdRoute } from "./utils/apiRoutes";
 
 // Function to fetch Google OAuth client ID from the backend
 async function fetchGoogleClientId() {
   try {
-    const response = await axios.get('http://localhost:3000/api/googleClientId');
+    const response = await axios.get(googleClientIdRoute);
     return response.data.clientId;
   } catch (error) {
     console.error('Error fetching Google client ID:', error);

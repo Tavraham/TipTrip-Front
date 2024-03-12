@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PostCard from "@/components/shared/PostCard";
 import axios from "axios";
+import { getAllPostsRoute } from "@/utils/apiRoutes";
 
 function Home() {
   const [posts, setPosts] = useState([]);
@@ -11,7 +12,7 @@ function Home() {
 
   const getPosts = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/posts/getAllPosts", {
+      const res = await axios.get(getAllPostsRoute, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },

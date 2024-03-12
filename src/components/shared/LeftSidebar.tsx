@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { INavLink } from "@/types";
 import { sidebarLinks } from "@/constants";
 import { Button } from "@/components/ui/button";
+import { host, logoutRoute } from "@/utils/apiRoutes";
 import axios from "axios";
 
 const LeftSidebar = () => {
@@ -13,7 +14,7 @@ const LeftSidebar = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.get("http://localhost:3000/auth/logout", {
+      await axios.get(logoutRoute, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
@@ -49,7 +50,7 @@ const LeftSidebar = () => {
               src={
                 localStorage.getItem("profilePicture") === "null"
                   ? "/assets/icons/profile-placeholder.svg"
-                  : `http://localhost:3000/${localStorage.getItem(
+                  : `${host}/${localStorage.getItem(
                       "profilePicture"
                     )}`
               }

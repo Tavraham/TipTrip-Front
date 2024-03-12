@@ -3,6 +3,7 @@ import Loader from "@/components/shared/Loader";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import PostCard from "@/components/shared/PostCard";
+import { changeProfilePictureRoute, getPostByNameRoute, host } from "@/utils/apiRoutes";
 
 interface StabBlockProps {
   value: string | number;
@@ -24,7 +25,7 @@ const Profile = () => {
     async function getPosts() {
       try {
         const res = await axios.get(
-          `http://localhost:3000/posts/getPostByName/${name}`,
+          `${getPostByNameRoute}/${name}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -45,7 +46,7 @@ const Profile = () => {
       formData.append("name", name || "");
       formData.append("file", event.target.files[0]);
       const res = await axios.put(
-        `http://localhost:3000/auth/changeProfilePicture`,
+        changeProfilePictureRoute,
         formData,
         {
           headers: {
@@ -79,7 +80,7 @@ const Profile = () => {
             src={
               localStorage.getItem("profilePicture") === "null"
                 ? "/assets/icons/profile-placeholder.svg"
-                : `http://localhost:3000/${localStorage.getItem(
+                : `${host}/${localStorage.getItem(
                     "profilePicture"
                   )}`
             }

@@ -1,3 +1,4 @@
+import { createCommentRoute, getPostRoute, host } from "@/utils/apiRoutes";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
@@ -22,7 +23,7 @@ const PostDetails = () => {
     async function getPost() {
       try {
         const res = await axios.get(
-          `http://localhost:3000/posts/postId/${id}`,
+          `${getPostRoute}/${id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -48,7 +49,7 @@ const PostDetails = () => {
     const comment = prompt("Enter your comment");
     const user = localStorage.getItem("name");
     await axios.put(
-      `http://localhost:3000/posts/createComment/${id}`,
+      `${createCommentRoute}/${id}`,
       { comment, user },
       {
         headers: {
@@ -70,7 +71,7 @@ const PostDetails = () => {
                   src={
                     !post.profilePic
                       ? "/assets/icons/profile-placeholder.svg"
-                      : `http://localhost:3000/${post.profilePic}`
+                      : `${host}/${post.profilePic}`
                   }
                   alt="creator"
                   className="rounded-full w-12 lg:h:12"
@@ -89,7 +90,7 @@ const PostDetails = () => {
               <ul className="flex gap-1 mt-2"></ul>
             </div>
             <img
-              src={`http://localhost:3000/${post.photo}`}
+              src={`${host}/${post.photo}`}
               className="post-card_img"
               alt="post image"
             />

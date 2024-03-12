@@ -14,6 +14,7 @@ import {
 import { Textarea } from "../ui/textarea";
 import FileUploader from "../shared/FileUploader";
 import axios from "axios";
+import { createPostRoute, updatePostRoute } from "@/utils/apiRoutes";
 
 const PostForm = ({ post }) => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const PostForm = ({ post }) => {
       formData.append("name", localStorage.getItem("name") || "");
       formData.append("description", values.caption);
       formData.append("file", form.getValues('file')); // Retrieve file value from form
-      await axios.post("http://localhost:3000/posts/createPost", formData, {
+      await axios.post(createPostRoute, formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           "Content-Type": "multipart/form-data",
@@ -50,7 +51,7 @@ const PostForm = ({ post }) => {
       formData.append("description", values.caption);
       formData.append("file", form.getValues('file')); // Retrieve file value from form
       await axios.put(
-        `http://localhost:3000/posts/updatePost/${post._id}`,
+        `${updatePostRoute}/${post._id}`,
         formData,
         {
           headers: {
