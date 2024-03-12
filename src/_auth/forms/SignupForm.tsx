@@ -42,13 +42,17 @@ const SignupForm = () => {
         "http://localhost:3000/auth/register",
         values
       );
+      console.log(res.data);
 
       form.reset();
+      localStorage.setItem("accessToken", res.data.accessToken);
+      localStorage.setItem("refreshToken", res.data.refreshToken);
+      localStorage.setItem("name", res.data.user.name);
+      localStorage.setItem("email", res.data.user.email);
+      localStorage.setItem("profilePicture", res.data.user.photo);
       navigate("/home");
-      localStorage.setItem("accessToken",res.data.accessToken)
-      localStorage.setItem("refreshToken",res.data.refreshToken)
       console.log(res.data);
-    }  catch (error: any) {
+    } catch (error: any) {
       console.error("Registration error:", error.message);
       if (error.response && error.response.data) {
         const responseData = error.response.data;
@@ -134,10 +138,7 @@ const SignupForm = () => {
 
           <p className="text-small-regular text-light-2 text-center mt-2">
             Already have an account ?
-            <Link
-              to="/"
-              className="text-primary-500  text-small-semibold ml-1"
-            >
+            <Link to="/" className="text-primary-500  text-small-semibold ml-1">
               Log in{" "}
             </Link>
           </p>

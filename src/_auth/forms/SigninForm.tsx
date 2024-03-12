@@ -20,11 +20,16 @@ import Loader from "@/components/shared/Loader";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
+import { useEffect } from "react";
 
 const SigninForm = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const isLoading = false;
+
+  useEffect(() => {
+    checkAccessTokenExpiry();
+  }, []);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof SigninValidation>>({
@@ -42,7 +47,7 @@ const SigninForm = () => {
       form.reset();
       localStorage.setItem("accessToken", res.data.accessToken);
       localStorage.setItem("refreshToken", res.data.refreshToken);
-      navigate("/home");
+      goHome(res.data.user);
     } catch (error: any) {
       console.error("Registration error:", error.message);
       if (error.response && error.response.data) {
@@ -70,14 +75,15 @@ const SigninForm = () => {
       localStorage.setItem("refreshToken", response.data.refreshToken);
     } catch (error) {
       console.error(error);
-      // Handle error, e.g., logout user, redirect to login page, etc.
     }
   };
 
   // Function to check access token expiry and trigger refresh if needed
   const checkAccessTokenExpiry = async () => {
+    console.log("Checking access token expiry");
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
+      console.log("Access token found");
       // Access token not found, maybe user is not logged in
       try {
         const decodedToken = jwtDecode(accessToken);
@@ -87,26 +93,40 @@ const SigninForm = () => {
         }
         const currentTime = Date.now() / 1000; // Convert milliseconds to seconds
         if (decodedToken.exp < currentTime) {
+          console.log("Access token is expired");
           // Access token is expired, refresh it
           await refreshToken();
-          navigate("/home");
         }
+        navigate("/home");
       } catch (error) {
         console.error(error);
       }
     }
+    console.log("Access token not found");
   };
-  // Call this function when your app initializes or when appropriate
-  checkAccessTokenExpiry();
 
-  const loginToGoogle = async(credentialResponse: CredentialResponse) => {
+  const loginToGoogle = async (credentialResponse: CredentialResponse) => {
     const credentialDecoded = jwtDecode(credentialResponse.credential);
-    const res = await axios.post("http://localhost:3000/auth/googleLogin", { email: credentialDecoded.email, name: credentialDecoded.name})
+    const res = await axios.post("http://localhost:3000/auth/googleLogin", {
+      email: credentialDecoded.email,
+      name: credentialDecoded.name,
+    });
     localStorage.setItem("accessToken", res.data.accessToken);
     localStorage.setItem("refreshToken", res.data.refreshToken);
-    navigate("/home");
+    goHome(res.data.user);
     console.log(res.data);
-  }
+  };
+
+  const goHome = async (user: {
+    name: string;
+    email: string;
+    photo: string;
+  }) => {
+    localStorage.setItem("name", user.name);
+    localStorage.setItem("email", user.email);
+    localStorage.setItem("profilePicture", user.photo);
+    navigate("/home");
+  };
 
   return (
     <Form {...form}>

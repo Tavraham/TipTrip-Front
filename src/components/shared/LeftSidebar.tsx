@@ -1,38 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { INavLink } from "@/types";
 import { sidebarLinks } from "@/constants";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { toast } from "../ui/use-toast";
 
 const LeftSidebar = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const [user, setUser] = useState(null);
-  const [email, setEmail] = useState(null);
-
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      const accessToken = localStorage.getItem("accessToken");
-      if (accessToken) {
-        try {
-          const res = await axios.get("http://localhost:3000/auth/userInfo", {
-            headers: { Authorization: `Bearer ${accessToken}` },
-          });
-          setUser(res.data.name);
-          setEmail(res.data.email);
-          localStorage.setItem("name", res.data.name);
-          localStorage.setItem("email", res.data.email);
-          localStorage.setItem("profilePicture", res.data.photo);
-        } catch (error) {
-          toast({ title: "Error fetching user info" });
-        }
-      }
-    };
-
-    fetchUserInfo();
-  }, []);
+  const [user] = useState(localStorage.getItem("name"));
+  const [email] = useState(localStorage.getItem("email"));
 
   const handleLogout = async () => {
     // await axios.get("http://localhost:3000/auth/logout");
