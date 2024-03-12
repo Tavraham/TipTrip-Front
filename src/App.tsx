@@ -33,9 +33,6 @@ const App = () => {
         <Route element={<RootLayout />}>
           <Route path="/home" element={<Home />} />
           <Route path="/chat" element={<Chat />} />
-          {/* <Route path="/explore" element={<Explore />} /> */}
-          {/* <Route path="/saved" element={<Saved />} /> */}
-          {/* <Route path="/all-users" element={<AllUsers />} /> */}
           <Route path="/create-post" element={<CreatePost />} />
           <Route path="/update-post/:id" element={<EditPost />} />
           <Route path="/post/:id" element={<PostDetails />} />

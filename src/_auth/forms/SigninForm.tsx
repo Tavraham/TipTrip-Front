@@ -52,9 +52,9 @@ const SigninForm = () => {
       if (error.response && error.response.data) {
         const responseData = error.response.data;
         console.log("Response data:", responseData);
-        toast({ title: `Registration failed: ${responseData}` });
+        toast({ title: responseData });
       } else {
-        toast({ title: "Registration failed: Something went wrong." });
+        toast({ title: "Password or Email is incorrect" });
       }
     }
   }

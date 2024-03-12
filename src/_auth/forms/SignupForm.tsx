@@ -30,7 +30,6 @@ const SignupForm = () => {
     resolver: zodResolver(SignupValidation),
     defaultValues: {
       name: "",
-      // username: "",
       email: "",
       password: "",
     },
@@ -39,10 +38,7 @@ const SignupForm = () => {
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof SignupValidation>) {
     try {
-      const res = await axios.post(
-        registerRoute,
-        values
-      );
+      const res = await axios.post(registerRoute, values);
       console.log(res.data);
 
       form.reset();
@@ -58,7 +54,7 @@ const SignupForm = () => {
       if (error.response && error.response.data) {
         const responseData = error.response.data;
         console.log("Response data:", responseData);
-        toast({ title: `Registration failed: ${responseData}` });
+        toast({ title:  responseData });
       } else {
         toast({ title: "Registration failed: Something went wrong." });
       }
@@ -90,7 +86,6 @@ const SignupForm = () => {
                 <FormControl>
                   <Input type="text" className="shad-input" {...field} />
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}
@@ -105,7 +100,6 @@ const SignupForm = () => {
                 <FormControl>
                   <Input type="email" className="shad-input" {...field} />
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}
@@ -120,7 +114,6 @@ const SignupForm = () => {
                 <FormControl>
                   <Input type="password" className="shad-input" {...field} />
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}
