@@ -15,8 +15,10 @@ import { Textarea } from "../ui/textarea";
 import FileUploader from "../shared/FileUploader";
 import axios from "axios";
 import { createPostRoute, host, updatePostRoute } from "@/utils/apiRoutes";
+import { useToast } from "@/components/ui/use-toast";
 
 const PostForm = ({ post }) => {
+  const { toast } = useToast();
   const navigate = useNavigate();
   const [imageUrl, setImageUrl] = useState<string | null>(
     post ? `${host}/${post.photo.replace('..', '')}` : null
@@ -34,6 +36,13 @@ const PostForm = ({ post }) => {
       formData.append("name", localStorage.getItem("name") || "");
       formData.append("description", values.caption);
       formData.append("file", form.getValues('file')); // Retrieve file value from form
+
+      // Validate if both caption and file are provided
+      if (!values.caption || !form.getValues('file')) {
+        toast({title:"Please provide both caption and picture."});
+        return;
+      }
+
       await axios.post(createPostRoute, formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
