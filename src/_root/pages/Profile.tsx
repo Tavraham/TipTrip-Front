@@ -155,7 +155,7 @@ const Profile = () => {
                   width={20}
                   height={20}
                 />
-                <p className="flex whitespace-nowrap small-medium">Edit Name</p>
+                <p className="flex whitespace-nowrap small-medium">Change Name</p>
               </button>
             </div>
           </div>
