@@ -107,11 +107,11 @@ const Chat = () => {
                     : `http://localhost:3000/${user.photo}`
                 }
                 alt="profilePic" 
-                className="w-8 h-8 rounded-full mr-2" />
+                className="w-11 h-11 rounded-full mr-2" />
               {selectedUser && selectedUser._id === user._id ? (
-                <button className="bg-primary-500 py-1 px-2 rounded">{user.name}</button>
+                <button className="bg-primary-500 py-1 px-2 rounded text-xl">{user.name}</button>
               ) : (
-                <button className="bg-primary-500 hover:bg-gray-200 py-1 px-2 rounded" onClick={() => openChat(user)}>
+                <button className="bg-primary-500 hover:bg-gray-200 py-1 px-2 rounded text-black text-sm" onClick={() => openChat(user)}>
                   {user.name}
                 </button>
               )}
@@ -122,7 +122,7 @@ const Chat = () => {
       <div className="flex-1 p-4">
         {selectedUser && (
           <>
-            <h2 className="text-lg font-bold mb-4">Chat with {selectedUser.name}</h2>
+            <h2 className="text-xl font-bold mb-4">Chat with {selectedUser.name}</h2>
             <div className="h-96 overflow-y-auto mb-4">
               <ul>
                 {messages.map((message, index) => (
