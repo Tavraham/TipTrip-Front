@@ -38,7 +38,7 @@ const PostForm = ({ post }) => {
         },
       });
   
-      navigate("/home");
+      navigate(-1);
     } catch (error) {
       console.error("Submission error:", error);
     }
@@ -60,7 +60,7 @@ const PostForm = ({ post }) => {
         }
       );
   
-      navigate("/home");
+      navigate(-1);
     } catch (error) {
       console.error("Submission error:", error);
     }

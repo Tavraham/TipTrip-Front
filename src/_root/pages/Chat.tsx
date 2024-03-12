@@ -94,48 +94,70 @@ const Chat = () => {
   }
 
   return (
-    <div>
-      <div id="users">
-        <h2>Users</h2>
+    <div className="flex">
+      <div className="user-container w-1/4 p-4 border-r">
+        <h2 className="h3-bold md:h2-bold text-left w-full">Users:</h2>
         <ul>
           {users.map((user: any) => (
-            <li key={user._id}>
+            <li key={user.name} className="mb-2 flex items-center">
+              <img
+                src={
+                  !user.photo
+                    ? "/assets/icons/profile-placeholder.svg"
+                    : `http://localhost:3000/${user.photo}`
+                }
+                alt="profilePic" 
+                className="w-8 h-8 rounded-full mr-2" />
               {selectedUser && selectedUser._id === user._id ? (
-                <button disabled>{user.name}</button>
+                <button className="bg-primary-500 py-1 px-2 rounded">{user.name}</button>
               ) : (
-                <button onClick={() => openChat(user)}>{user.name}</button>
+                <button className="bg-primary-500 hover:bg-gray-200 py-1 px-2 rounded" onClick={() => openChat(user)}>
+                  {user.name}
+                </button>
               )}
             </li>
           ))}
         </ul>
       </div>
-      <div id="chat">
+      <div className="flex-1 p-4">
         {selectedUser && (
           <>
-            <h2>Chat with {selectedUser.name}</h2>
-            <ul>
-              {messages.map((message, index) => (
-                <li key={index}>{message}</li>
-              ))}
-            </ul>
-            <input
-              type="text"
-              placeholder="Type your message..."
-              value={messageInput}
-              onChange={(e) => setMessageInput(e.target.value)}
-              style={{ color: "black" }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  sendMessage();
-                }
-              }}
-            />
-            <button onClick={sendMessage}>Send</button>
+            <h2 className="text-lg font-bold mb-4">Chat with {selectedUser.name}</h2>
+            <div className="h-96 overflow-y-auto mb-4">
+              <ul>
+                {messages.map((message, index) => (
+                  <li key={index}>{message}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="flex">
+              <input
+                type="text"
+                placeholder="Type your message..."
+                value={messageInput}
+                onChange={(e) => setMessageInput(e.target.value)}
+                style={{ color: "black" }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    sendMessage();
+                  }
+                }}
+                className="flex-1 py-2 px-4 rounded-l border border-gray-300 focus:outline-none focus:border-blue-500"
+              />
+              <button
+                onClick={sendMessage}
+                className="py-2 px-4 bg-blue-500 text-white rounded-r hover:bg-blue-600 focus:outline-none"
+              >
+                Send
+              </button>
+            </div>
           </>
         )}
       </div>
     </div>
   );
+  
 };
 
 export default Chat;
+
