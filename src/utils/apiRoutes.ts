@@ -15,3 +15,4 @@ export const createPostRoute = `${host}/posts/createPost`;
 export const updatePostRoute = `${host}/posts/updatePost`;
 export const deletePostRoute = `${host}/posts/deletePost`;
 export const googleClientIdRoute = `${host}/api/googleClientId`;
+export const getReviewApiRoute = `${host}/api/review`;
