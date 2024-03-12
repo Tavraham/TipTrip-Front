@@ -39,7 +39,7 @@ const Explore = () => {
             </a>
             <div className="reviews">
               {reviews.slice(0, 5).map((review, index) => (
-                <div key={index} className="review">
+                <div key={index} className="border border-gray-300 rounded-md p-4 mb-4">
                   <p className="font-semibold mb-1">Review {index + 1}:</p>
                   <p>{review}</p>
                 </div>
