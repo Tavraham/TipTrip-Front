@@ -12,15 +12,23 @@ const LeftSidebar = () => {
   const [email] = useState(localStorage.getItem("email"));
 
   const handleLogout = async () => {
-    // await axios.get("http://localhost:3000/auth/logout");
-    // Clear local storage
-    localStorage.removeItem("Id");
-    localStorage.removeItem("name");
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("email");
-    localStorage.removeItem("profilePicture");
-    navigate("/");
+    try {
+      await axios.get("http://localhost:3000/auth/logout", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
+      // Clear local storage
+      localStorage.removeItem("Id");
+      localStorage.removeItem("name");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("email");
+      localStorage.removeItem("profilePicture");
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
