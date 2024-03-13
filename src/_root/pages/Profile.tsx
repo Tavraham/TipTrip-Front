@@ -9,6 +9,7 @@ import {
   host,
   changeNameRoute,
 } from "@/utils/apiRoutes";
+import { toast } from "@/components/ui/use-toast";
 
 interface StabBlockProps {
   value: string | number;
@@ -85,7 +86,10 @@ const Profile = () => {
       // Optionally, you can reload the page to reflect the name change immediately
       window.location.reload();
     } catch (error) {
-      console.error("Error changing name:", error);
+      toast({
+        title: "Error changing name: name already exists",
+        description: "Please try again with a different name.",
+      });
     }
   };
 
@@ -155,36 +159,35 @@ const Profile = () => {
                   width={20}
                   height={20}
                 />
-                <p className="flex whitespace-nowrap small-medium">Change Name</p>
+                <p className="flex whitespace-nowrap small-medium">
+                  Change Name
+                </p>
               </button>
             </div>
           </div>
 
-           {/* Edit Picture button */}
-           <div className="flex justify-center gap-4">
+          {/* Edit Picture button */}
+          <div className="flex justify-center gap-4">
             <div>
               <button
                 onChange={changePicture}
                 className={`h-12 bg-dark-4 px-5 text-light-1 flex-center gap-2 rounded-lg `}
               >
                 <label htmlFor="upload-photo" className="cursor-pointer">
-            <img
-              src={"/assets/icons/edit.svg"}
-              alt="edit"
-              width={20}
-              height={20}
-            />
-            <input
-              type="file"
-              id="upload-photo"
-              className="hidden"
-            />
-          </label>
-                <p className="flex whitespace-nowrap small-medium">Change picture</p>
+                  <img
+                    src={"/assets/icons/edit.svg"}
+                    alt="edit"
+                    width={20}
+                    height={20}
+                  />
+                  <input type="file" id="upload-photo" className="hidden" />
+                </label>
+                <p className="flex whitespace-nowrap small-medium">
+                  Change picture
+                </p>
               </button>
             </div>
           </div>
-
         </div>
       </div>
       {/* Display user's posts */}
