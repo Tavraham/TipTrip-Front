@@ -19,7 +19,11 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { useEffect } from "react";
-import { googleLoginRoute, loginRoute, refreshTokenRoute } from "@/utils/apiRoutes";
+import {
+  googleLoginRoute,
+  loginRoute,
+  refreshTokenRoute,
+} from "@/utils/apiRoutes";
 
 const SigninForm = () => {
   const { toast } = useToast();
@@ -47,29 +51,19 @@ const SigninForm = () => {
       localStorage.setItem("accessToken", res.data.accessToken);
       localStorage.setItem("refreshToken", res.data.refreshToken);
       goHome(res.data.user);
-    } catch (error: any) {
-      console.error("Registration error:", error.message);
-      if (error.response && error.response.data) {
-        const responseData = error.response.data;
-        console.log("Response data:", responseData);
-        toast({ title: responseData });
-      } else {
-        toast({ title: "Password or Email is incorrect" });
-      }
+    } catch {
+      toast({ title: "Password or Email is incorrect" });
     }
   }
 
   // Function to refresh token
   const refreshToken = async () => {
     try {
-      const response = await axios.get(
-        refreshTokenRoute,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
-          },
-        }
-      );
+      const response = await axios.get(refreshTokenRoute, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
+        },
+      });
       localStorage.setItem("accessToken", response.data.accessToken);
       localStorage.setItem("refreshToken", response.data.refreshToken);
     } catch (error) {
@@ -105,15 +99,20 @@ const SigninForm = () => {
   };
 
   const loginToGoogle = async (credentialResponse: CredentialResponse) => {
-    const credentialDecoded = jwtDecode(credentialResponse.credential);
-    const res = await axios.post(googleLoginRoute, {
-      email: credentialDecoded.email,
-      name: credentialDecoded.name,
-    });
-    localStorage.setItem("accessToken", res.data.accessToken);
-    localStorage.setItem("refreshToken", res.data.refreshToken);
-    goHome(res.data.user);
-    console.log(res.data);
+    if (credentialResponse.credential) {
+      const credentialDecoded: {
+        name: string;
+        email: string;
+      } = jwtDecode(credentialResponse.credential);
+      const res = await axios.post(googleLoginRoute, {
+        email: credentialDecoded.email,
+        name: credentialDecoded.name,
+      });
+      localStorage.setItem("accessToken", res.data.accessToken);
+      localStorage.setItem("refreshToken", res.data.refreshToken);
+      goHome(res.data.user);
+      console.log(res.data);
+    }
   };
 
   const goHome = async (user: {

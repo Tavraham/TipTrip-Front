@@ -1,6 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
-import { useEffect } from "react";
 import axios from "axios";
 import { host, logoutRoute } from "@/utils/apiRoutes";
 

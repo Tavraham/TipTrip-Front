@@ -2,7 +2,7 @@ import { deletePostRoute, host } from "@/utils/apiRoutes";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-const PostCard = ({ post }) => {
+const PostCard = ({ post }: { post: {_id: string; profilePic: string; name: string; description: string; photo: string}  }) => {
   function deletePost() {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this post?"

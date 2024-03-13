@@ -1,7 +1,6 @@
-import { Link } from "react-router-dom";
 import Loader from "@/components/shared/Loader";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import PostCard from "@/components/shared/PostCard";
 import {
   changeProfilePictureRoute,
@@ -26,9 +25,7 @@ const StatBlock = ({ value, label }: StabBlockProps) => (
 const Profile = () => {
   // const name = localStorage.getItem("name");
   const [posts, setPosts] = useState([]);
-  const [name, setName] = useState<string>(
-    () => localStorage.getItem("name") || ""
-  );
+  const [name] = useState<string>(() => localStorage.getItem("name") || "");
 
   useEffect(() => {
     async function getPosts() {
@@ -46,11 +43,13 @@ const Profile = () => {
     getPosts();
   }, [name]);
 
-  const changePicture = async (event) => {
+  const changePicture = async (event: ChangeEvent<HTMLInputElement>) => {
     try {
       const formData = new FormData();
       formData.append("name", name || "");
-      formData.append("file", event.target.files[0]);
+      if (event.target.files) {
+        formData.append("file", event.target.files[0]);
+      }
       const res = await axios.put(changeProfilePictureRoute, formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -115,21 +114,6 @@ const Profile = () => {
             alt="profile"
             className="w-28 h-28 lg:h-36 lg:w-36 rounded-full"
           />
-          {/* Upload profile picture
-          <label htmlFor="upload-photo" className="cursor-pointer">
-            <img
-              src={"/assets/icons/edit.svg"}
-              alt="edit"
-              width={20}
-              height={20}
-            />
-            <input
-              type="file"
-              id="upload-photo"
-              className="hidden"
-              onChange={changePicture}
-            />
-          </label> */}
           {/* Profile information */}
           <div className="flex flex-col flex-1 justify-between md:mt-2">
             <div className="flex flex-col w-full">
@@ -168,35 +152,45 @@ const Profile = () => {
 
           {/* Edit Picture button */}
           <div className="flex justify-center gap-4">
-            <div>
-              <button
-                onChange={changePicture}
+            <label htmlFor="upload-photo" className="cursor-pointer">
+              <div
                 className={`h-12 bg-dark-4 px-5 text-light-1 flex-center gap-2 rounded-lg `}
               >
-                <label htmlFor="upload-photo" className="cursor-pointer">
-                  <img
-                    src={"/assets/icons/edit.svg"}
-                    alt="edit"
-                    width={20}
-                    height={20}
-                  />
-                  <input type="file" id="upload-photo" className="hidden" />
-                </label>
+                <img
+                  src={"/assets/icons/edit.svg"}
+                  alt="edit"
+                  width={20}
+                  height={20}
+                />
                 <p className="flex whitespace-nowrap small-medium">
                   Change picture
                 </p>
-              </button>
-            </div>
+              </div>
+            </label>
+            <input
+              type="file"
+              id="upload-photo"
+              className="hidden"
+              onChange={changePicture}
+            />
           </div>
         </div>
       </div>
       {/* Display user's posts */}
       <ul className="flex flex-col flex-1 gap-9 w-full">
-        {posts.map((post) => (
-          <li key={post.id} className="flex justify-center w-full">
-            <PostCard post={post} />
-          </li>
-        ))}
+        {posts.map(
+          (post: {
+            _id: string;
+            profilePic: string;
+            name: string;
+            description: string;
+            photo: string;
+          }) => (
+            <li key={post._id} className="flex justify-center w-full">
+              <PostCard post={post} />
+            </li>
+          )
+        )}
       </ul>
     </div>
   );

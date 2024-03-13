@@ -1,5 +1,5 @@
 // Import useState hook
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,7 @@ import axios from "axios";
 import { createPostRoute, host, updatePostRoute } from "@/utils/apiRoutes";
 import { useToast } from "@/components/ui/use-toast";
 
-const PostForm = ({ post }) => {
+const PostForm = ({ post }: { post: {_id: string; profilePic: string; name: string; description: string; photo: string} | null }) => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [imageUrl, setImageUrl] = useState<string | null>(
@@ -27,6 +27,7 @@ const PostForm = ({ post }) => {
   const form = useForm({
     defaultValues: {
       caption: post ? post.description : "",
+      file: "",
     },
   });
 
@@ -62,7 +63,7 @@ const PostForm = ({ post }) => {
       formData.append("description", values.caption);
       formData.append("file", form.getValues('file')); // Retrieve file value from form
       await axios.put(
-        `${updatePostRoute}/${post._id}`,
+        `${updatePostRoute}/${post?._id}`,
         formData,
         {
           headers: {

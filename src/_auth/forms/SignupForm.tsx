@@ -49,15 +49,8 @@ const SignupForm = () => {
       localStorage.setItem("profilePicture", res.data.user.photo);
       navigate("/home");
       console.log(res.data);
-    } catch (error: any) {
-      console.error("Registration error:", error.message);
-      if (error.response && error.response.data) {
-        const responseData = error.response.data;
-        console.log("Response data:", responseData);
-        toast({ title:  responseData });
-      } else {
-        toast({ title: "Registration failed: Something went wrong." });
-      }
+    } catch {
+      toast({ title: "Registration failed: Something went wrong." });
     }
   }
 
