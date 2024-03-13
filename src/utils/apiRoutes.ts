@@ -1,4 +1,4 @@
-export const host = "https://10.10.248.195:443";
+export const host = "http://10.10.248.195:443";
 export const logoutRoute = `${host}/auth/logout`;
 export const loginRoute = `${host}/auth/login`;
 export const refreshTokenRoute = `${host}/auth/refreshToken`;
