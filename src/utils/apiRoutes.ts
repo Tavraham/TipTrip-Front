@@ -1,4 +1,4 @@
-export const host = "https://node35.cs.colman.ac.il";
+export const host = "https://localhost:3000";
 export const logoutRoute = `${host}/auth/logout`;
 export const loginRoute = `${host}/auth/login`;
 export const refreshTokenRoute = `${host}/auth/refreshToken`;
