@@ -1,30 +1,64 @@
-# React + TypeScript + Vite
+<a name="readme-top"></a>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<div align="center">
+  <img src="public/assets/images/logo.jpg" alt="logo" />
+  <p align="center">Social network for travle</p>
+</div>
+<br/>
 
-Currently, two official plugins are available:
+## Clone the repos
+To run the web you need to clone this repository using the following url in the VCS:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+   ```sh
+   https://github.com/YanivRabin/TripTip-web-app-backend.git
+   ```
+<p align="right"><a href="#readme-top">back to top</a></p>
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Setup
+After cloning the repos you need to open the terminal on each one and npm install to download all the packages:
 
-- Configure the top-level `parserOptions` property like this:
+   ```sh
+   npm install
+   ```
+<p align="right"><a href="#readme-top">back to top</a></p>
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+Now you should create a .env file with the next fromat:
+<br /><br />
+DATABASE_URL='mongodb://[your data base]'<br />
+PORT=3000<br />
+JWT_SECRET=[your secret]<br />
+JWT_REFRESH_SECRET=[your refresh secrete]<br />
+JWT_EXPIRATION=3h<br />
+GOOGLE_CLIENT_ID=[google ouath key]<br />
+GOOGLE_API_KEY=[google api key]<br />
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Run the web
+
+To run the web you should run the follow commands in the terminal:
+   ```sh
+   npm run start
+   ```
+<p align="right"><a href="#readme-top">back to top</a></p>
+
+
+Now on the web you should enter in the url:
+```sh
+http://localhost:3000
+   ```
+<p align="right"><a href="#readme-top">back to top</a></p>
+
+## Docs
+If you want to see the Swagger docs you should enter in the url:
+```sh
+http://localhost:3000/api-docs
+   ```
+<p align="right"><a href="#readme-top">back to top</a></p>
+
+
+<br/>
+<br/>
+<br/>
+
+<img src="public/assets/images/login.png" alt="pic" />
+<img src="public/assets/images/feed.png">
