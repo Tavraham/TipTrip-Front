@@ -3,6 +3,7 @@
 <div align="center">
   <img src="public/assets/images/logo.jpg" alt="logo" />
   <p align="center">Social network for travle</p>
+  <a href="https://www.canva.com/design/DAF_fSTJNeY/o09m47NuVXMu0VyJdNaTVA/view?utm_content=DAF_fSTJNeY&utm_campaign=designshare&utm_medium=link&utm_source=editor">Overview Video</a>
 </div>
 <br/>
 
